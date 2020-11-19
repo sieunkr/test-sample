@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.util.ObjectUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,16 +27,16 @@ public class DemoApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        coffeeRedisTemplate.opsForHash().put("key", "20201119", Coffee.builder()
+        coffeeRedisTemplate.opsForHash().put("key", "00", Coffee.builder()
                 .name("americano")
                 .price(1200)
                 .test(Arrays.asList(10L, 11L, 12L))
                 .build());
-        coffeeRedisTemplate.opsForHash().put("key", "20201120", Coffee.builder().name("latte").price(1100).build());
+        coffeeRedisTemplate.opsForHash().put("key", "01", Coffee.builder().name("latte").price(1100).build());
 
 
 
-        coffeeRedisTemplate.opsForHash().get("key", "20201119");
+        coffeeRedisTemplate.opsForHash().get("key", "01");
 
         /*
         Map<Object, Object> val = coffeeRedisTemplate.opsForHash().entries("key");
@@ -44,8 +45,20 @@ public class DemoApplication implements CommandLineRunner {
 
         log.info("test");
         */
-        
 
+        Integer a = ((Coffee)coffeeRedisTemplate.opsForHash().get("key", "01")).getPrice();
+        Integer b = ((Coffee)coffeeRedisTemplate.opsForHash().get("key", "00")).getPrice();
+
+
+        Object object = coffeeRedisTemplate.opsForHash().get("key", "03");
+
+        if(!ObjectUtils.isEmpty(object)) {
+            
+        }
+
+        Integer c = ((Coffee)coffeeRedisTemplate.opsForHash().get("key", "03")).getPrice();
+
+        log.info(String.valueOf(a - b));
 
     }
 }
